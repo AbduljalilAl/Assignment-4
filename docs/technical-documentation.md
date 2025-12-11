@@ -1,4 +1,4 @@
-# Technical Documentation – Assignment 4 (Template)
+# Technical Documentation – Assignment 4
 
 ## Overview
 React (Vite) frontend + Express/MongoDB backend portfolio with: theme toggle, greeting/name memory, session timer, projects search/filter/sort, GitHub feed, random tip fetch, contact form with API submit, and admin-only messages view.
@@ -7,7 +7,7 @@ React (Vite) frontend + Express/MongoDB backend portfolio with: theme toggle, gr
 - Frontend: React 18 (Vite), CSS
 - Backend: Node.js (Express), MongoDB (Mongoose)
 
-## Project Structure (fill in if you change it)
+## Project Structure
 ```
 client/          # React app (src/components, src/hooks, src/styles.css, public/assets)
 server/          # Express API (index.js, .env.example)
@@ -49,25 +49,24 @@ presentation/    # slides.pdf, demo-video.mp4 (placeholders)
 3) Run API: `cd server && npm run dev`
 4) Run client: `cd client && npm run dev` (proxy `/api` to server)
 
-## Deployment Notes (fill these in)
-- Frontend host: TODO (Netlify/Vercel/other)
-- API host: TODO (Render/Fly/other) with env vars set
-- Mongo: TODO (Atlas/local), network allowlist as needed
+## Deployment Notes
+- Frontend host: not deployed (run locally via Vite)
+- API host: not deployed (run locally via Node)
+- Mongo: Atlas connection via `MONGODB_URI` in `.env`
 
-## Testing/Validation (fill in what you run)
-- Frontend: TODO (e.g., `npm run build`, manual flows covered)
-- Backend: TODO (e.g., Postman collection, unit tests if added)
+## Testing/Validation
+- Frontend: `npm run build`; manual flows for theme toggle, projects filters, GitHub fetch, fun tip, contact form, admin view.
+- Backend: manual checks via `POST /api/contact`, `GET /api/admin/messages`, `GET /api/health` (Postman/curl).
 
 ## Accessibility & UX Considerations
 - `aria-live` on status messages (greeting, timers, fact box, form feedback)
-- Keyboard: Enter submits admin load, search prevented from accidental submit; buttons and selects accessible.
+- Keyboard: Enter submits admin load; search prevented from accidental submit; buttons and selects accessible.
 - Dark mode styles for cards, inputs, selects (projects/admin)
 
 ## Performance
 - Lazy images with dimensions; Vite production build for tree-shaking.
 - Minimal JS for filters/fetches; localStorage hydration guarded.
 
-## TODO (customize for your submission)
-- Add any extra features/sections you implement.
-- Update deployment URLs and testing notes.
-- Keep AI usage log in `docs/ai-usage-report.md` in sync.
+## Notes
+- Update deployment URLs if you host the app.
+- Keep `docs/ai-usage-report.md` current if you use more AI assistance.
