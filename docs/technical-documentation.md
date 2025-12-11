@@ -1,72 +1,220 @@
-# Technical Documentation – Assignment 4
+Technical Documentation – Assignment 4
+Overview
 
-## Overview
-React (Vite) frontend + Express/MongoDB backend portfolio with: theme toggle, greeting/name memory, session timer, projects search/filter/sort, GitHub feed, random tip fetch, contact form with API submit, and admin-only messages view.
+This project is a full-stack portfolio application built with a React (Vite) frontend and an Express/MongoDB backend.
+It includes:
 
-## Stack
-- Frontend: React 18 (Vite), CSS
-- Backend: Node.js (Express), MongoDB (Mongoose)
+Theme toggle (light/dark)
+Remembered name + personalized greeting
+Session timer
+Projects search/filter/sort
+GitHub activity feed
+Random tip generator
+Contact form with backend submission
+Admin-only messages dashboard with filtering and sorting
 
-## Project Structure
-```
-client/          # React app (src/components, src/hooks, src/styles.css, public/assets)
-server/          # Express API (index.js, .env.example)
-docs/            # ai-usage-report.md, technical-documentation.md
-presentation/    # slides.pdf, demo-video.mp4 (placeholders)
-```
+Stack
+1-Frontend
+React 18 (Vite)
+CSS (custom styles)
 
-## Frontend Details
-- Entry: `client/src/main.jsx`, `client/src/App.jsx`
-- Key components: Navbar, About, Projects, Github, FunFact, Contact, Admin, Footer
-- State/logic highlights:
-  - Theme stored in `localStorage` (`theme`), respects prefers-color-scheme.
-  - Projects controls saved to `localStorage` (`project-state`); search/filter/sort applied in memory.
-  - GitHub fetch: `GET https://api.github.com/users/{username}/repos?sort=updated&per_page=5` with loading/error states; username saved to `localStorage` (`github-username`).
-  - Fun tip fetch: `GET https://api.adviceslip.com/advice` (no-store); retry button.
-  - Contact form: client validation, POST to `/api/contact`; shows success/error inline.
-  - Admin view: requires secret; fetches `/api/admin/messages`; filters by email, date range (today/last week/last month/specific/all), and sort asc/desc; defaults to last week.
-  - Persistent name memory and greeting; session timer.
+2-Backend
+Node.js (Express)
+MongoDB (Mongoose)
 
-## Backend Details
-- Server: `server/index.js`
-- Env: `.env.example` → `.env` with `MONGODB_URI`, `PORT`, `ADMIN_SECRET`
-- Models:
-  - `Contact`: `{ contactId, name, email, message, createdAt }`
-  - `Counter`: `{ key, value }` (for incremental contactId starting at 100000)
-- Routes:
-  - `GET /api/health` → { ok, serverTime, db }
-  - `POST /api/contact` → validates body; creates Contact with incremental contactId
-  - `GET /api/admin/messages` → requires header `x-admin-secret` matching `ADMIN_SECRET`; returns sorted messages
-- Server config: CORS enabled, JSON body parsing.
+Project Structure
+client/          # React application
+  src/
+    components/
+    hooks/
+    styles.css
+  public/assets/
 
-## Data/State Keys
-- Frontend: `theme`, `remembered-name`, `project-state`, `github-username`
-- Backend env: `MONGODB_URI`, `PORT`, `ADMIN_SECRET`
+server/          # Express backend
+  index.js
+  .env.example
 
-## Setup & Run (summary)
-1) `cd client && npm install`; `cd ../server && npm install`
-2) `cp server/.env.example server/.env` and set values
-3) Run API: `cd server && npm run dev`
-4) Run client: `cd client && npm run dev` (proxy `/api` to server)
+docs/
+  ai-usage-report.md
+  technical-documentation.md
+
+presentation/
+  slides.pdf
+  demo-video.mp4
+
+Frontend Details
+  Entry Points
+    client/src/main.jsx
+    client/src/App.jsx
+  Core Components
+    Navbar
+    About
+    Projects
+    Github
+    FunFact
+    Contact
+    Admin
+    Footer
+
+Feature & State Logic
+Theme System
+  Stored in localStorage under theme
+  Respects prefers-color-scheme
+  Toggle persists across sessions
+
+Projects Section
+  UI controls stored in localStorage under project-state
+  Search, filter, and sorting performed in-memory
+  Fully client-side and responsive
+
+GitHub Feed
+  Fetches repositories via:
+  GET https://api.github.com/user {username}/repos?sort=updated&per_page=5
+  Handles loading and error states
+  GitHub username stored in localStorage under github-username
+
+Fun Fact Generator
+  Fetches from:
+  GET https://api.adviceslip.com/advice
+  Uses “no-store” caching directives for fresh results
+  Includes retry button
+
+Contact Form
+  Validates input client-side
+  Sends POST request to /api/contact
+  Shows inline success/error feedback
+
+Admin Dashboard
+  Protected by a secret header
+  Fetches from /api/admin/messages
+  Filters:
+    Email
+      Date ranges (today, last week, last month, custom, all)
+      Sort direction (asc/desc)
+      Default view loads messages from the past week
+      Supports keyboard interaction for better accessibility
+      
+Additional UX Details
+Remembered name stored under remembered-name
+Session timer updates live
+aria-live regions for dynamic status updates
+
+Backend Details
+  Server
+    server/index.js
+    Environment variables stored in .env (copied from .env.example)
+
+Environment Variables
+  MONGODB_URI
+  PORT
+  ADMIN_SECRET
+
+MongoDB Models
+Contact
+{
+  contactId,
+  name,
+  email,
+  message,
+  createdAt
+}
+
+Counter
+{
+  key,
+  value
+}
+
+
+Used to generate incremental contactId values starting at 100000.
+
+API Routes
+GET /api/health
+
+Returns:
+
+{ ok, serverTime, db }
+
+POST /api/contact
+  Validates request body
+  Creates a new Contact with a unique incremental contactId
+
+GET /api/admin/messages
+  Requires header: x-admin-secret
+  Returns all contact messages, sortable by date
+
+Server Configuration
+  CORS enabled
+  JSON body parsing
+  Error-safe ID generation using counter document
+
+Data & State Keys
+  Frontend
+    theme
+    remembered-name
+    project-state
+    github-username
+
+  Backend
+    MONGODB_URI
+    PORT
+    ADMIN_SECRET
+
+Setup & Run
+  Install dependencies:
+    cd client && npm install
+    cd ../server && npm install
+
+
+Copy environment file:
+cp server/.env.example server/.env
+Fill in your MongoDB URI and admin secret.
+
+Start backend:
+cd server && npm run dev
+
+Start frontend:
+cd client && npm run dev
+
+
+## Development Server Behavior
+The Vite development server automatically proxies `/api` requests to the backend, allowing the frontend and backend to run on separate ports during local development while still communicating seamlessly.
 
 ## Deployment Notes
-- Frontend host: not deployed (run locally via Vite)
-- API host: not deployed (run locally via Node)
-- Mongo: Atlas connection via `MONGODB_URI` in `.env`
+Designed for local development using Vite (frontend) and Node.js/Express (backend).
+MongoDB Atlas is used through the `MONGODB_URI` value in the `.env` file.
+If deployed, update:
+- Backend API URLs in frontend fetch requests
+- Deployment links in the README
 
-## Testing/Validation
-- Frontend: `npm run build`; manual flows for theme toggle, projects filters, GitHub fetch, fun tip, contact form, admin view.
-- Backend: manual checks via `POST /api/contact`, `GET /api/admin/messages`, `GET /api/health` (Postman/curl).
+## Testing & Validation
+
+### Frontend Testing
+Manually verified:
+- Theme toggle
+- Projects search/filter/sort
+- GitHub feed loading and error handling
+- Fun Fact generator
+- Contact form validation and submission
+- Admin dashboard filters, sorting, and secret access
+
+**Build check:**
+npm run build
+
+### Backend Testing
+Validated routes with Postman and cURL:
+- POST /api/contact — create message
+- GET /api/admin/messages — protected admin messages
+- GET /api/health — server and DB status
 
 ## Accessibility & UX Considerations
-- `aria-live` on status messages (greeting, timers, fact box, form feedback)
-- Keyboard: Enter submits admin load; search prevented from accidental submit; buttons and selects accessible.
-- Dark mode styles for cards, inputs, selects (projects/admin)
+- aria-live regions for dynamic content updates
+- Keyboard-friendly controls (admin filters, Enter-key behavior, maintained focus)
+- High-contrast dark-mode colors
+- Clear input grouping and readable dropdown menus
 
 ## Performance
-- Lazy images with dimensions; Vite production build for tree-shaking.
-- Minimal JS for filters/fetches; localStorage hydration guarded.
-
-## Notes
-- Update deployment URLs if you host the app.
-- Keep `docs/ai-usage-report.md` current if you use more AI assistance.
+- Optimized images with defined dimensions
+- Vite production build for tree-shaking and bundling
+- Minimal, targeted JavaScript for essential interactions
+- Safe hydration of localStorage values
