@@ -1,0 +1,7 @@
+# Node / build
+node_modules/
+
+# Env / secrets
+.env
+.env.*
+*.local

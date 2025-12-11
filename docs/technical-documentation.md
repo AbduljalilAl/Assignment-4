@@ -1,84 +1,73 @@
-# Technical Documentation - Assignment 3
+# Technical Documentation – Assignment 4 (Template)
 
 ## Overview
-Personal portfolio with advanced interactivity: persisted theme, remembered visitor name, session timer, project search/filter/sort with saved state, GitHub API feed, AdviceSlip tip fetch, and validated contact form. Performance improvements include lazy images and defined dimensions to reduce layout shift.
+React (Vite) frontend + Express/MongoDB backend portfolio with: theme toggle, greeting/name memory, session timer, projects search/filter/sort, GitHub feed, random tip fetch, contact form with API submit, and admin-only messages view.
 
 ## Stack
-- HTML5 / CSS3 / JavaScript (ES6)
-- Static site (no build tool or framework)
+- Frontend: React 18 (Vite), CSS
+- Backend: Node.js (Express), MongoDB (Mongoose)
 
-## Structure
+## Project Structure (fill in if you change it)
 ```
-assignment-3/
-├── index.html
-├── css/styles.css
-├── js/script.js
-├── assets/images/
-└── docs/
-    ├── ai-usage-report.md
-    └── technical-documentation.md
+client/          # React app (src/components, src/hooks, src/styles.css, public/assets)
+server/          # Express API (index.js, .env.example)
+docs/            # ai-usage-report.md, technical-documentation.md
+presentation/    # slides.pdf, demo-video.mp4 (placeholders)
 ```
 
-## Key UI Elements
-- `#theme-toggle`: toggles `body.dark-mode`, persists theme.
-- `#greeting`: time-of-day greeting, includes remembered visitor name.
-- `#remember-name`, `#remember-save`, `#remembered-name`: store and display visitor name locally.
-- `#session-timer`: shows time on site.
-- Projects: `.project-card` with `data-tags`, `data-date`, `data-title`; controls `#project-search`, `#project-filter`, `#project-sort`; empty state `#project-empty`.
-- GitHub feed: `#github-form`, `#github-username`, `#github-status`, `#github-repos`.
-- Dev Tip: `#fact-box`, `#fact-retry` (AdviceSlip API).
-- Contact: `.contact-form` with inputs `#name`, `#email`, `#message`, feedback `#form-msg`.
+## Frontend Details
+- Entry: `client/src/main.jsx`, `client/src/App.jsx`
+- Key components: Navbar, About, Projects, Github, FunFact, Contact, Admin, Footer
+- State/logic highlights:
+  - Theme stored in `localStorage` (`theme`), respects prefers-color-scheme.
+  - Projects controls saved to `localStorage` (`project-state`); search/filter/sort applied in memory.
+  - GitHub fetch: `GET https://api.github.com/users/{username}/repos?sort=updated&per_page=5` with loading/error states; username saved to `localStorage` (`github-username`).
+  - Fun tip fetch: `GET https://api.adviceslip.com/advice` (no-store); retry button.
+  - Contact form: client validation, POST to `/api/contact`; shows success/error inline.
+  - Admin view: requires secret; fetches `/api/admin/messages`; filters by email, date range (today/last week/last month/specific/all), and sort asc/desc; defaults to last week.
+  - Persistent name memory and greeting; session timer.
 
-## Interactive Features - How They Work
-
-### Theme Persistence
-- Storage key: `theme` (`dark` | `light`).
-- Init: applies saved theme; if none, respects `prefers-color-scheme: dark`.
-- Toggle updates class and localStorage; button text reflects current mode.
-
-### Greeting + Remembered Name
-- Greeting chooses morning/afternoon/evening via `Date.getHours()`.
-- Name is stored under `remembered-name`; saving updates greeting and a status line.
-
-### Session Timer
-- On page load, start time is captured; a 1s interval updates `Time on site: m:ss`.
-
-### Projects: Search, Filter, Sort, Persisted State
-- Inputs: text search, tag filter, sort (latest/oldest/title).
-- Sorting uses `data-date` (parsed) or `data-title`; DOM nodes are re-appended in sorted order.
-- Filtering matches text content and `data-tags`.
-- Empty state toggles when no visible cards.
-- State (search/filter/sort) is stored in `localStorage` under `project-state` and re-applied on load.
-
-### GitHub API Integration
-- Endpoint: `GET https://api.github.com/users/{username}/repos?sort=updated&per_page=5` with `Accept: application/vnd.github+json`.
-- Username stored locally under `github-username` and prefilled on load.
-- States: waiting, loading, success (renders list), error, empty.
-- Renders repo name/link, description, language, and last updated date.
-
-### Random Dev Tip (AdviceSlip)
-- Endpoint: `GET https://api.adviceslip.com/advice` with `{ cache: "no-store" }`.
-- States: loading, success (`slip.advice`), error fallback with retry button.
-- Retry button is disabled while fetching.
-
-### Contact Form Validation
-- Validates name non-empty, email regex `^[^\s@]+@[^\s@]+\.[^\s@]+$`, and message non-empty.
-- Feedback via `#form-msg` with animated classes; simulated success clears the form.
-
-## Styling & Performance
-- Lazy-loaded images (`loading="lazy"`, `decoding="async"`) with explicit `width/height` to prevent layout shifts.
-- Theme colors defined via CSS variables for light/dark modes.
-- Smooth transitions on background/color; hover states use transform/opacity.
-- Reduced-motion support disables heavy animations.
-- GitHub/feed cards share the card style and reuse utility classes.
-
-## Accessibility
-- `aria-live` on greeting, timer, fact box, and form message.
-- `role="status"` on timer and empty states; `role="alert"` on form feedback.
-- Focus-visible states maintained for interactive elements.
+## Backend Details
+- Server: `server/index.js`
+- Env: `.env.example` → `.env` with `MONGODB_URI`, `PORT`, `ADMIN_SECRET`
+- Models:
+  - `Contact`: `{ contactId, name, email, message, createdAt }`
+  - `Counter`: `{ key, value }` (for incremental contactId starting at 100000)
+- Routes:
+  - `GET /api/health` → { ok, serverTime, db }
+  - `POST /api/contact` → validates body; creates Contact with incremental contactId
+  - `GET /api/admin/messages` → requires header `x-admin-secret` matching `ADMIN_SECRET`; returns sorted messages
+- Server config: CORS enabled, JSON body parsing.
 
 ## Data/State Keys
-- `theme`: "dark" | "light"
-- `remembered-name`: visitor name string
-- `project-state`: JSON `{ search, filter, sort }`
-- `github-username`: last used username
+- Frontend: `theme`, `remembered-name`, `project-state`, `github-username`
+- Backend env: `MONGODB_URI`, `PORT`, `ADMIN_SECRET`
+
+## Setup & Run (summary)
+1) `cd client && npm install`; `cd ../server && npm install`
+2) `cp server/.env.example server/.env` and set values
+3) Run API: `cd server && npm run dev`
+4) Run client: `cd client && npm run dev` (proxy `/api` to server)
+
+## Deployment Notes (fill these in)
+- Frontend host: TODO (Netlify/Vercel/other)
+- API host: TODO (Render/Fly/other) with env vars set
+- Mongo: TODO (Atlas/local), network allowlist as needed
+
+## Testing/Validation (fill in what you run)
+- Frontend: TODO (e.g., `npm run build`, manual flows covered)
+- Backend: TODO (e.g., Postman collection, unit tests if added)
+
+## Accessibility & UX Considerations
+- `aria-live` on status messages (greeting, timers, fact box, form feedback)
+- Keyboard: Enter submits admin load, search prevented from accidental submit; buttons and selects accessible.
+- Dark mode styles for cards, inputs, selects (projects/admin)
+
+## Performance
+- Lazy images with dimensions; Vite production build for tree-shaking.
+- Minimal JS for filters/fetches; localStorage hydration guarded.
+
+## TODO (customize for your submission)
+- Add any extra features/sections you implement.
+- Update deployment URLs and testing notes.
+- Keep AI usage log in `docs/ai-usage-report.md` in sync.
