@@ -2,7 +2,7 @@
 
 **Student:** Abbduljalil  
 **Repo:** assignment-4 (mirrors this project)  
-**Date:** TODO
+**Date:** 2025-12-11
 
 I used AI as a helper for ideas and scaffolding, then implemented and adjusted the code myself. Below are the concrete interactions.
 

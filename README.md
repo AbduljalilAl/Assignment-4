@@ -1,8 +1,6 @@
 # Assignment 4 – Personal Web Application (React + Node + MongoDB)
 
-This repo contains the final portfolio web app rebuilt with React (Vite) and an Express/MongoDB API for contact submissions and a private admin view. The UI keeps all prior features (theme, greeting, remembered name, session timer, projects filter/sort, GitHub feed, random tip) and adds an admin-only messages viewer.
-
-> NOTE: If your instructor requires a public repo named `assignment-4`, mirror this repo there and keep the structure below.
+Final portfolio web app rebuilt with React (Vite) and an Express/MongoDB API for contact submissions and a private admin view. UI features include theme toggle, greeting + remembered name, session timer, projects filter/sort, GitHub feed, random tip, contact form with validation, and admin-only messages viewer.
 
 ## Structure (top-level)
 ```
@@ -52,16 +50,16 @@ assignment-4/             # use this name on GitHub
 - Backend: run via `npm start` in `server/`
 
 ## Deployment (fill these in)
-- Live frontend URL: **TODO**
-- Live API URL: **TODO**
-- CI/CD notes: **TODO**
+- Live frontend URL: not deployed (run locally)
+- Live API URL: not deployed (run locally)
+- CI/CD notes: n/a
 
 ## Presentation assets
 - Add your slides to `presentation/slides.pdf`
 - Add your demo to `presentation/demo-video.mp4`
 
 ## AI usage (summary; full log in docs/ai-usage-report.md)
-- **TODO:** add your own summary here after updating the log.
+- Logged in `docs/ai-usage-report.md` (ChatGPT used for scaffolding ideas, admin flow, and styling suggestions; implementation reviewed and adjusted manually).
 
 ## Academic integrity
 - Keep `ADMIN_SECRET` out of commits.  
